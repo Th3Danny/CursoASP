@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<h1>
+    Ejemplo 1 de Ajax.ActionLink Basico - carga de seccion 
+</h1>
+
+@Ajax.ActionLink("Carga de seccion", "SeccionPruebas", new AjaxOptions()
+{
+    HttpMethod = "GET",
+    InsertionMode = InsertionMode.Replace,
+    UpdateTargetId = "Resultado"
+})
+
+<div id="resultado">
+
+</div>
+
+@section Scripts{
+    <script srs="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+}
