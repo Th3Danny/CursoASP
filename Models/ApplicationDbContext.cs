@@ -40,5 +40,7 @@ namespace CursoASPAjax
                 .Property(e => e.Nombre)
                 .IsUnicode(false);
         }
+
+
     }
 }

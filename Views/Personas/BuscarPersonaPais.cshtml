@@ -1,0 +1,42 @@
+@model IEnumerable<CursoASPAjax.PersonasPorPaisVM>
+
+@{
+    ViewBag.Title = "Buscar Personas por Pais";
+}
+
+<h2>Buscador de Personas por Pais</h2>
+
+@using (Html.BeginForm("BuscarPersonaPais", "Personas", FormMethod.Get))
+{
+    <div class="form-group">
+        <label>Seleccione un Pais:</label>
+        @Html.DropDownList("idPais", (SelectList)ViewBag.idPais, "-- Seleccione un Pais --", new { @class = "form-control" })
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </div>
+}
+
+<hr />
+
+@if (Model != null)
+{
+    <table class="table">
+        <tr>
+            <th>Nombre</th>
+            <th>Pais</th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                <td>@Html.DisplayFor(modelItem => item.Pais)</td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", "Personas", new { id = item.Id }, null) |
+                    @Html.ActionLink("Details", "Details", "Personas", new { id = item.Id }, null) |
+                    @Html.ActionLink("Delete", "Delete", "Personas", new { id = item.Id }, null)
+                </td>
+            </tr>
+        }
+    </table>
+}

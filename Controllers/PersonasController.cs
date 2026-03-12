@@ -111,5 +111,21 @@ namespace CursoASPAjax.Controllers
             _service.Eliminar(id);
             return RedirectToAction("Index");
         }
+
+        // GET: Personas/BuscarPersonaPais
+        public ActionResult BuscarPersonaPais(int? idPais)
+        {
+            // Siempre enviamos la lista de países para el dropdown
+            ViewBag.idPais = new SelectList(_service.ListarPaises(), "Id", "Pais", idPais);
+
+            List<PersonasPorPaisVM> resultados = new List<PersonasPorPaisVM>();
+
+            if (idPais != null)
+            {
+                resultados = _service.ListarPersonasPorPais(idPais.Value);
+            }
+
+            return View(resultados);
+        }
     }
 }
