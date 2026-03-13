@@ -43,5 +43,20 @@ namespace CursoASPAjax.IServices.Services
         {
             return _repo.GetPaises();
         }
+
+        public List<string> BuscarPersonas(string term)
+        {
+            return _repo.BuscarPersonasTerm(term);
+        }
+
+        public List<Personas> FiltrarPersonas(string term)
+        {
+            return _repo.FiltrarPersonas(term);
+        }
+
+        public List<Personas> FiltrarPorEdad(int min, int max)
+        {
+            return _repo.FiltrarPorEdad(min, max);
+        }
     }
 }

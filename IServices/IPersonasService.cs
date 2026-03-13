@@ -8,6 +8,11 @@ namespace CursoASPAjax.IServices
     public interface IPersonasService
     {
         List<PersonasPorPaisVM> ListarPersonasPorPais(int idPais);
+
+        List<string> BuscarPersonas(string term);
+        List<Personas> FiltrarPersonas(string term);
+        List<Personas> FiltrarPorEdad(int min, int max);
+
         List<Personas> ListarTodas();
         Personas ObtenerPorId(int id);
         void Insertar(Personas persona);

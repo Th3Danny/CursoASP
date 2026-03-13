@@ -4,6 +4,9 @@ using System.Linq;
 using System.Data.Entity;
 using System.Data.SqlClient;
 using CursoASPAjax;
+using System.Security.Cryptography.X509Certificates;
+using System.Web.Helpers;
+using System.Web.Mvc;
 
 namespace CursoASPAjax.Repositories
 {
@@ -24,9 +27,36 @@ namespace CursoASPAjax.Repositories
             ).ToList();
         }
 
+        public List<string> BuscarPersonasTerm(string term)
+        {
+            var resultado = _db.Personas
+                .Where(x => x.Nombre.Contains(term))
+                .Select(x => x.Nombre)
+                .Take(5)
+                .ToList();
+
+            return resultado;
+        }
+
         public List<Personas> GetAllPersonas()
         {
             return _db.Personas.Include(p => p.Paises).ToList();
+        }
+
+        public List<Personas> FiltrarPersonas(string term)
+        {
+            return _db.Personas
+                .Include(p => p.Paises)
+                .Where(p => p.Nombre.Contains(term))
+                .ToList();
+        }
+
+        public List<Personas> FiltrarPorEdad(int min, int max)
+        {
+            return _db.Personas
+                .Include(p => p.Paises)
+                .Where(p => p.Edad >= min && p.Edad <= max)
+                .ToList();
         }
 
         public Personas GetById(int id)

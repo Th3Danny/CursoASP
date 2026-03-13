@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using CursoASPAjax;
 using CursoASPAjax.IServices;
 using CursoASPAjax.IServices.Services;
 
@@ -15,10 +14,19 @@ namespace CursoASPAjax.Controllers
         private readonly IPersonasService _service = new PersonasService();
 
         // GET: Personas
-        public ActionResult Index()
+        public ActionResult Index(string term)
         {
-            var personas = _service.ListarTodas();
+            var personas = string.IsNullOrEmpty(term) 
+                ? _service.ListarTodas() 
+                : _service.FiltrarPersonas(term);
             return View(personas);
+        }
+
+        // GET: Personas/GetPersonasSuggestions?term=...
+        public JsonResult GetPersonasSuggestions(string term)
+        {
+            var suggestions = _service.BuscarPersonas(term);
+            return Json(suggestions, JsonRequestBehavior.AllowGet);
         }
 
         // GET: Personas/Details/5
@@ -54,7 +62,7 @@ namespace CursoASPAjax.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.idPais = new SelectList(_service.ListarPaises(), "Id", "Pais", personas.idPais, "Telefono");
+            ViewBag.idPais = new SelectList(_service.ListarPaises(), "Id", "Pais", personas.idPais);
             return View(personas);
         }
 
@@ -77,14 +85,14 @@ namespace CursoASPAjax.Controllers
         // POST: Personas/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Nombre,Edad,idPais, Telefono")] Personas personas)
+        public ActionResult Edit([Bind(Include = "Id,Nombre,Edad,idPais,Telefono")] Personas personas)
         {
             if (ModelState.IsValid)
             {
                 _service.Actualizar(personas);
                 return RedirectToAction("Index");
             }
-            ViewBag.idPais = new SelectList(_service.ListarPaises(), "Id", "Pais", personas.idPais, "Telefono");
+            ViewBag.idPais = new SelectList(_service.ListarPaises(), "Id", "Pais", personas.idPais);
             return View(personas);
         }
 
@@ -115,9 +123,7 @@ namespace CursoASPAjax.Controllers
         // GET: Personas/BuscarPersonaPais
         public ActionResult BuscarPersonaPais(int? idPais)
         {
-            // Siempre enviamos la lista de países para el dropdown
             ViewBag.idPais = new SelectList(_service.ListarPaises(), "Id", "Pais", idPais);
-
             List<PersonasPorPaisVM> resultados = new List<PersonasPorPaisVM>();
 
             if (idPais != null)
@@ -126,6 +132,13 @@ namespace CursoASPAjax.Controllers
             }
 
             return View(resultados);
+        }
+
+        [HttpPost]
+        public ActionResult cambioSlider(int min, int max)
+        {
+            var personas = _service.FiltrarPorEdad(min, max);
+            return PartialView("_TablaPersonas", personas);
         }
     }
 }
